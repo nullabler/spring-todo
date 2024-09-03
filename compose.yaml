@@ -1,0 +1,14 @@
+services:
+  mariadb:
+    image: 'mariadb:latest'
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - './.build/dev/db:/var/lib/mysql'
+    environment:
+      - 'MARIADB_DATABASE=test'
+      - 'MARIADB_PASSWORD=admin'
+      - 'MARIADB_ROOT_PASSWORD=root'
+      - 'MARIADB_USER=admin'
+    ports:
+      - '33061:3306'

@@ -24,12 +24,9 @@ public class TaskService {
         task.setTitle(title);
         task.setActive(true);
         if (pid != null) {
-            Optional<TaskEntity> parentOptional = this.taskRepository.findById(pid);
-            if (parentOptional.isPresent()) {
-                TaskEntity parent = parentOptional.get();
-                task.setParent(parent);
-                task.setDeep(parent.getDeep() + 1);
-            }
+            TaskEntity parent = this.getTaskEntity(pid);
+            task.setParent(parent);
+            task.setDeep(parent.getDeep() + 1);
         }
         this.taskRepository.save(task);
 
@@ -45,14 +42,18 @@ public class TaskService {
     }
 
     public void toggleActive(Integer id, Boolean active) {
+        TaskEntity task = this.getTaskEntity(id);
+        task.setActive(active);
+
+        this.taskRepository.save(task);
+    }
+
+    public TaskEntity getTaskEntity(Integer id) {
         Optional<TaskEntity> taskOptional = this.taskRepository.findById(id);
         if (!taskOptional.isPresent()) {
             throw new NotFoundException("Not found task by ID: " + id.toString());
         }
 
-        TaskEntity task = taskOptional.get();
-        task.setActive(active);
-
-        this.taskRepository.save(task);
+        return taskOptional.get();
     }
 }

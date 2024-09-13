@@ -3,18 +3,22 @@ package com.nullabler.todo.dto.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateNodeRequest {
+public class CreateTaskRequest {
 
     private String title;
 
     private Integer parentId;
 
-    public String getTitle() {
-        return title;
+    public CreateTaskRequest(
+        String title,
+        Integer parentId
+    ) {
+        this.title = title;
+        this.parentId = parentId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getTitle() {
+        return title;
     }
 
     public Integer getParentId() {
@@ -23,9 +27,5 @@ public class CreateNodeRequest {
     
     public Boolean isEmptyParentId() {
         return parentId == null;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
     }
 }

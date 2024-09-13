@@ -1,7 +1,5 @@
 package com.nullabler.todo.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,12 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nullabler.todo.dto.request.CreateNodeRequest;
-import com.nullabler.todo.dto.request.DeleteNodeRequest;
+import com.nullabler.todo.dto.request.CreateTaskRequest;
 import com.nullabler.todo.dto.request.ToggleActiveTaskRequest;
 import com.nullabler.todo.dto.response.ErrorResponse;
 import com.nullabler.todo.dto.response.MessageResponse;
@@ -25,44 +23,45 @@ import com.nullabler.todo.exception.NotFoundException;
 import com.nullabler.todo.service.TaskService;
 
 @RestController
+@RequestMapping("/api/task")
 public class TaskController {
 
     @Autowired
     TaskService taskService;
 
-    @GetMapping("/task")
+    @GetMapping
     @ResponseBody 
-    public Iterable<TaskEntity> getNodeAll() {
-        return this.taskService.getRootNodeAll();
+    public Iterable<TaskEntity> list() {
+        return this.taskService.getRootAll();
     }
 
-    @PutMapping("/task")
+    @PutMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskEntity createNode(@RequestBody CreateNodeRequest createNodeRequest) {
+    public TaskEntity create(@RequestBody CreateTaskRequest createTaskRequest) {
         Integer pid = null;
-        if (!createNodeRequest.isEmptyParentId()) {
-            pid = createNodeRequest.getParentId();
+        if (!createTaskRequest.isEmptyParentId()) {
+            pid = createTaskRequest.getParentId();
         }
 
-        return this.taskService.createNode(createNodeRequest.getTitle(), pid);
+        return this.taskService.create(createTaskRequest.getTitle(), pid);
     }
 
-    @GetMapping("/task/{id}")
+    @GetMapping("/{id}")
     @ResponseBody 
-    public Optional<TaskEntity> viewNode(@PathVariable("id") Integer id) {
-        return this.taskService.viewNode(id);
+    public TaskEntity view(@PathVariable("id") Integer id) {
+        return this.taskService.getTaskEntity(id);
     }
 
-    @DeleteMapping("/task")
+    @DeleteMapping("/{id}")
     @ResponseBody
-    public MessageResponse deleteNode(@RequestBody DeleteNodeRequest deleteNodeRequest) {
-        this.taskService.deleteNode(deleteNodeRequest.getId());
+    public MessageResponse delete(@PathVariable("id") Integer id) {
+        this.taskService.delete(id);
 
-        return new MessageResponse("Delete");
+        return new MessageResponse("Deleted");
     }
 
-    @PostMapping("/task/toggle")
+    @PostMapping("/toggle")
     @ResponseBody
     public MessageResponse toggleActive(@RequestBody ToggleActiveTaskRequest toggleActiveTaskRequest) {
         this.taskService.toggleActive(toggleActiveTaskRequest.getId(), toggleActiveTaskRequest.isActive());

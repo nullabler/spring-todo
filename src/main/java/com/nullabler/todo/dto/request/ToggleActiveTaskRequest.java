@@ -6,19 +6,19 @@ public class ToggleActiveTaskRequest {
 
     private Boolean active;
 
+    public ToggleActiveTaskRequest(
+        Integer id,
+        Boolean active
+    ) {
+        this.id = id;
+        this.active = active;
+    }
+
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public Boolean isActive() {
         return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 }

@@ -15,11 +15,11 @@ public class TaskService {
     @Autowired
     TaskRepository taskRepository;
 
-    public Iterable<TaskEntity> getRootNodeAll() {
+    public Iterable<TaskEntity> getRootAll() {
         return this.taskRepository.findAllByDeep(0);
     }
 
-    public TaskEntity createNode(String title, Integer pid) {
+    public TaskEntity create(String title, Integer pid) {
         TaskEntity task = new TaskEntity();
         task.setTitle(title);
         task.setActive(true);
@@ -33,12 +33,8 @@ public class TaskService {
         return task;
     }
 
-    public Optional<TaskEntity> viewNode(Integer id) {
-        return this.taskRepository.findById(id);
-    }
-
-    public void deleteNode(Integer id) {
-        this.taskRepository.delete(this.viewNode(id).get());
+    public void delete(Integer id) {
+        this.taskRepository.delete(this.getTaskEntity(id));
     }
 
     public void toggleActive(Integer id, Boolean active) {

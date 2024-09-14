@@ -57,7 +57,6 @@ public class TaskControllerTest {
         .andExpect(content().string(containsString("\"title\":\"" + task.getTitle() + "\"")))
         .andExpect(content().string(containsString("\"active\":true")));
 
-
         // Toggle active
         ToggleActiveTaskRequest reqToggle = new ToggleActiveTaskRequest(1, false);
         MessageResponse resp = new MessageResponse("Changed");
